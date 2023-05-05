@@ -1,0 +1,18 @@
+{
+  "name": "repro",
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "node --loader=ts-node/esm --experimental-specifier-resolution=node --test health.test.ts"
+  },
+  "dependencies": {
+    "fastify": "4.10.0",
+    "@fastify/autoload": "5.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.9",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "5.0.2"
+  }
+}

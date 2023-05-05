@@ -27,6 +27,15 @@ That's my interpretation of things, anyway, I don't have Node the knowledge it
 would require to fully understand what's happening in the Node internals to make
 this work in Node 19 and not work in Node 20.
 
+## Tickets
+
+- Node: https://github.com/nodejs/node/issues/47880
+- Fastify: https://github.com/fastify/fastify/issues/4734
+
+I suspect this is a Node issue but I think it is in the realm of possibility
+that this is a Fastify issue or even if not, that they might be able to develop
+a workaround, so I've opened an issue with both Node and Fastify.
+
 ## Prerequisites
 
 NVM

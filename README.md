@@ -27,6 +27,13 @@ That's my interpretation of things, anyway, I don't have Node the knowledge it
 would require to fully understand what's happening in the Node internals to make
 this work in Node 19 and not work in Node 20.
 
+## This Branch
+
+This branch tests whether removing `--test` makes any difference.
+It doesn't.
+
+See the `main` branch for the root of the issue.
+
 ## Tickets
 
 - Node: https://github.com/nodejs/node/issues/47880
@@ -47,40 +54,27 @@ NVM
 1. `nvm install 20` to install Node 20
 2. `node --version` to ensure Node version (I get 20.1.0)
 3. `npm install` to install dependencies
-4. `npm run test` to run the `health.test.ts` script
+4. `npm start` to run the `health.test.ts` script
 
 Notice the test fails and Fastify's `autoload` is seemingly not aware of the
 `--loader` option and attempts to load `routes/health.ts` without TypeScript to
 JavaScript conversion via `ts-node/esm`.
 
 ```
-npm run test
+npm start
 
-> repro@0.0.0 test
-> node --loader=ts-node/esm --experimental-specifier-resolution=node --test health.test.ts
+> repro@0.0.0 start
+> node --loader=ts-node/esm --experimental-specifier-resolution=node health.test.ts
 
-ℹ (node:95105) ExperimentalWarning: Custom ESM Loaders is an experimental feature and might change at any time
-ℹ (Use `node --trace-warnings ...` to show where the warning was created)
-✖ should be alive (32.750836ms)
-  Error: "@fastify/autoload cannot import plugin at '/routes/health.ts'. To fix this error compile TypeScript to JavaScript or use 'ts-node' to run your app."
-      at findPlugins (/node_modules/@fastify/autoload/index.js:224:15)
-      at async autoload (/node-esm-loader-repro/node_modules/@fastify/autoload/index.js:35:22)
+(node:3919) ExperimentalWarning: Custom ESM Loaders is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+/node_modules/@fastify/autoload/index.js:224
+        throw new Error(`@fastify/autoload cannot import plugin at '${file}'. To fix this error compile TypeScript to JavaScript or use 'ts-node' to run your app.`)
+              ^
 
-ℹ tests 1
-ℹ suites 0
-ℹ pass 0
-ℹ fail 1
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 2208.335483
-
-✖ failing tests:
-
-✖ should be alive (32.750836ms)
-  Error: "@fastify/autoload cannot import plugin at 'routes/health.ts'. To fix this error compile TypeScript to JavaScript or use 'ts-node' to run your app."
-      at findPlugins (/node_modules/@fastify/autoload/index.js:224:15)
-      at async autoload (/node_modules/@fastify/autoload/index.js:35:22)
+Error: @fastify/autoload cannot import plugin at '/routes/health.ts'. To fix this error compile TypeScript to JavaScript or use 'ts-node' to run your app.
+    at findPlugins (/node_modules/@fastify/autoload/index.js:224:15)
+    at async autoload (/node-esm-loader-repro/node_modules/@fastify/autoload/index.js:35:22)
 ```
 
 ### Node 19
@@ -88,26 +82,19 @@ npm run test
 1. `nvm install 19` to install Node 20
 2. `node --version` to ensure Node version (I get 19.9.0)
 3. `npm install` to install dependencies
-4. `npm run test` to run the `health.test.ts` script
+4. `npm start` to run the `health.test.ts` script
 
 Notice the test passes and Fastify's `autoload` is inherit the `--loader` option
 and uses the `ts-node/esm` loader successfully to auto-load `routes/health.ts`.
 
 ```
-npm run test
+npm start 
 
-> repro@0.0.0 test
-> node --loader=ts-node/esm --experimental-specifier-resolution=node --test health.test.ts
+> repro@0.0.0 start
+> node --loader=ts-node/esm --experimental-specifier-resolution=node health.test.ts
 
-ℹ (node:95453) ExperimentalWarning: Custom ESM Loaders is an experimental feature and might change at any time
-ℹ (Use `node --trace-warnings ...` to show where the warning was created)
-✔ should be alive (472.711395ms)
-ℹ tests 1
-ℹ suites 0
-ℹ pass 1
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 2679.742161
+(node:4199) ExperimentalWarning: Custom ESM Loaders is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+200 200
+true true
 ```

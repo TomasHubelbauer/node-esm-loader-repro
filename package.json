@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "test": "node --loader=ts-node/esm --experimental-specifier-resolution=node --test health.test.ts"
+    "start": "node --loader=ts-node/esm --experimental-specifier-resolution=node health.test.ts"
   },
   "dependencies": {
     "fastify": "4.10.0",
